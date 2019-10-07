@@ -31,12 +31,12 @@ export default {
 
 <style>
 #header-container {
-  height: 153px;
+  height: calc(153px - 16px);
   width: 100%;
+  padding-top : 16px;
 }
 #app-title {
   width: 100%;
-  margin-top: 16px;
   text-align: center;
   font-family: 'Indie Flower', cursive;
   color: #da911b;
