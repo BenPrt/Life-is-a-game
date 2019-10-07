@@ -7,14 +7,14 @@ const path = require('path');
 let mainWindow;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({ width: 1800, height: 1200 });
+  mainWindow = new BrowserWindow({ width: 1280, height: 860 });
 
   mainWindow.loadURL(
     url.format({
       pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file:',
-      slashes: true
-    })
+      slashes: true,
+    }),
   );
 
   mainWindow.on('closed', () => {

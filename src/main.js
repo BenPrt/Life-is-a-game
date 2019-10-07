@@ -3,6 +3,9 @@
 import Vue from 'vue';
 import App from './App';
 
+// Import global stylesheet
+require('./globalStyle.css');
+
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
