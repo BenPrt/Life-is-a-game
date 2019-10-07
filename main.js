@@ -7,7 +7,12 @@ const path = require('path');
 let mainWindow;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({ width: 1280, height: 860 });
+  mainWindow = new BrowserWindow({
+    width: 1280,
+    height: 860,
+    icon: 'src/assets/Ankama_Logo.png',
+    title: 'Life is a game',
+  });
 
   mainWindow.loadURL(
     url.format({
