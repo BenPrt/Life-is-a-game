@@ -1,6 +1,6 @@
 <template>
   <div id="content-container">
-    <Grid/>
+    <Grid v-bind:gridValue="this.gridValue"/>
     <Settings/>
   </div>
 </template>
@@ -16,6 +16,7 @@ export default {
     Grid,
     Settings,
   },
+  props: ['gridValue'],
 };
 </script>
 

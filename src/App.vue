@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header/>
-    <Content/>
+    <Content v-bind:gridValue="this.gridValue"/>
   </div>
 </template>
 
@@ -15,7 +15,28 @@ export default {
     Header,
     Content,
   },
+  data() {
+    return {
+      gridValue: [],
+    };
+  },
+  methods: {
+    generateGrid() {
+      for (let row = 0; row < 30; row += 1) {
+        const rowValues = [];
+        for (let col = 0; col < 30; col += 1) {
+          rowValues.push(0);
+        }
+        this.gridValue.push(rowValues);
+      }
+    },
+  },
+  beforeMount() {
+    this.generateGrid();
+  },
 };
+
+
 </script>
 
 <style>

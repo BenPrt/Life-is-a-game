@@ -6,6 +6,8 @@ let url = require('url');
 const path = require('path');
 let mainWindow;
 
+const env = process.argv[2];
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1280,
@@ -14,13 +16,19 @@ function createWindow() {
     title: 'Life is a game',
   });
 
-  mainWindow.loadURL(
-    url.format({
-      pathname: path.join(__dirname, 'dist/index.html'),
-      protocol: 'file:',
-      slashes: true,
-    }),
-  );
+  if (env === 'prod') {
+    console.log('Building production.....');
+    mainWindow.loadURL(
+      url.format({
+        pathname: path.join(__dirname, 'dist/index.html'),
+        protocol: 'file:',
+        slashes: true,
+      }),
+    );
+  } else {
+    console.log('Starting Dev Environment.....');
+    mainWindow.loadURL('http://localhost:8080');
+  }
 
   mainWindow.on('closed', () => {
     mainWindow = null;
