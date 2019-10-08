@@ -112,6 +112,12 @@ ipcMain.on('toggle-cell', (event, arg) => {
 ipcMain.on('play-game', event => {
   isPlaying = true;
   event.sender.send('played-game');
+  playGame();
+  mainWindow.webContents.send('update-grid', grid);
+});
+ipcMain.on('play-next', event => {
+  playNextStep();
+  mainWindow.webContents.send('update-grid', grid);
 });
 ipcMain.on('pause-game', event => {
   isPlaying = false;
@@ -147,4 +153,73 @@ generateGlider = function(row, col) {
   grid[row][col + 2] = 1;
   grid[row - 2][col + 1] = 1;
   grid[row - 1][col + 2] = 1;
+};
+
+playGame = function() {
+  grid = getNextGen();
+};
+
+playNextStep = function() {
+  grid = getNextGen();
+};
+
+getNextGen = function() {
+  // Next grid initialisation
+  let nextGrid = [];
+  for (let i = 0; i < grid.length; i++) {
+    nextGrid[i] = new Array(grid[i].length);
+  }
+  // For each cell of the actual grid...
+  for (let rowIdx = 0; rowIdx < height; rowIdx += 1) {
+    for (let colIdx = 0; colIdx < width; colIdx += 1) {
+      // ...let's count how many neighbours the current cell have
+      let neighNb = 0;
+
+      for (let x = -1; x <= 1; x += 1) {
+        let usableX;
+        // If we're at an extremity, we use the first cell from the other side (torus grid)
+        if (colIdx + x < 0) {
+          usableX = width - 1;
+        } else if (colIdx + x > width - 1) {
+          usableX = 0;
+        } else {
+          usableX = colIdx + x;
+        }
+
+        for (let y = -1; y <= 1; y += 1) {
+          let usableY;
+          if (rowIdx + y < 0) {
+            usableY = height - 1;
+          } else if (rowIdx + y > height - 1) {
+            usableY = 0;
+          } else {
+            usableY = rowIdx + y;
+          }
+
+          if (usableY !== 0 && usableX !== 0 && grid[usableY][usableX] === 1) {
+            neighNb += 1;
+          }
+        }
+      }
+
+      // Now, let's define next value for the cell according to its current neighbour number
+      cellValue = grid[rowIdx][colIdx];
+      console.log(neighNb);
+      switch (neighNb) {
+        case 0:
+        case 1:
+          cellValue = 0;
+          break;
+        case 2:
+          break;
+        case 3:
+          cellValue = 1;
+          break;
+        default:
+          cellValue = 0;
+      }
+      nextGrid[rowIdx][colIdx] = cellValue;
+    }
+  }
+  return nextGrid;
 };

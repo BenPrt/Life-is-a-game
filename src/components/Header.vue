@@ -7,7 +7,10 @@
       </button>
       <button class="main-button" id="pause-button" v-else @click="stop()">
         <i class="far fa-pause-circle"></i> Pause
-      </button>    
+      </button>
+      <button class="main-button" id="next-button" v-bind:disabled="isPlaying" @click="playNext()">
+        <i class="fas fa-arrow-circle-right"></i> Next
+      </button>
       <button class="main-button" id="reset-button" @click="reset()">
         <i class="fas fa-redo-alt"></i> Reset
       </button>
@@ -43,8 +46,11 @@ export default {
       ipcRenderer.send('play-game');
     },
     stop() {
-      ipcRenderer.send('pause-game');
       this.isPlaying = false;
+      ipcRenderer.send('pause-game');
+    },
+    playNext() {
+      ipcRenderer.send('play-next');
     },
     reset() {
       this.isPlaying = false;
@@ -72,8 +78,8 @@ export default {
 }
 #controls-container{
   margin-top: 24px;
-  width : 250px;
-  margin-left : calc((100% - 250px) / 2);
+  width : 350px;
+  margin-left : calc((100% - 350px) / 2);
   display : flex;
   justify-content: space-between;
 }
@@ -108,6 +114,27 @@ export default {
 }
 .fa-pause-circle {
   color: #e7a300;
+}
+
+#next-button{
+  background-color: #e7a300;
+  color: white;
+}
+#next-button:disabled{
+  background-color: grey;
+  cursor: default;
+}
+#next-button:disabled:hover{
+  color : white;
+}
+.fa-arrow-circle-right{
+  color: white;
+}
+.main-button:hover .fa-arrow-circle-right{
+  color: #EEEEEE;
+}
+.main-button:disabled:hover .fa-arrow-circle-right{
+  color: white;
 }
 
 #reset-button{

@@ -46,7 +46,7 @@ export default {
         vm.speed = 1;
         this.updateHeight();
         this.updateWidth();
-        This.updateSpeed();
+        this.updateSpeed();
       });
     },
     updateHeight() {
@@ -83,8 +83,8 @@ export default {
 <style>
 #settings-container {
   height : calc(-16px + 613px - 16px);
-  width : calc(-16px + ((100% - 536px) / 2) - 16px);
-  padding : 16px;
+  width : calc(-32px + ((100% - 536px) / 2) - 32px);
+  padding : 16px 32px;
 }
 
 #settings-title {
