@@ -73,28 +73,26 @@ const ipcMain = electron.ipcMain;
 
 // App parameters
 let grid = [];
-let height = 1;
-let width = 1;
-let speed = 1;
-let playInterval;
+let height = 30;
+let width = 30;
+let speed = 2;
 
 let isPlaying = false;
 
 // -------------------------------------
 // IPC interceptors for updating parameters (height, width and speed)
 ipcMain.on('update-height', (event, arg) => {
-  height = arg;
+  updateHeight(arg);
   generateGrid();
   mainWindow.webContents.send('update-grid', grid);
 });
 ipcMain.on('update-width', (event, arg) => {
-  width = arg;
+  updateWidth(arg);
   generateGrid();
   mainWindow.webContents.send('update-grid', grid);
 });
 ipcMain.on('update-speed', (event, arg) => {
-  speed = arg;
-  generateGrid();
+  updateSpeed(arg);
   mainWindow.webContents.send('update-grid', grid);
 });
 
@@ -108,14 +106,13 @@ ipcMain.on('generate-grid', event => {
 // -------------------------------------
 // IPC interceptor for toggling alive/dead cell
 ipcMain.on('toggle-cell', (event, arg) => {
-  grid[arg[0]][arg[1]] = grid[arg[0]][arg[1]] === 0 ? 1 : 0;
+  toggleCell(arg[0], arg[1]);
   event.sender.send('update-grid', grid);
 });
 
 // -------------------------------------
 // IPC interceptors for game status
 ipcMain.on('play-game', event => {
-  isPlaying = true;
   event.sender.send('played-game');
   playGame();
   mainWindow.webContents.send('update-grid', grid);
@@ -138,6 +135,39 @@ ipcMain.on('reset-game', event => {
 
 //-------------------------------------------
 // Calculation methods
+
+// Parameters update methods
+updateHeight = function(newHeight) {
+  height = newHeight;
+};
+updateWidth = function(newWidth) {
+  width = newWidth;
+};
+updateSpeed = function(newSpeed) {
+  speed = newSpeed;
+  switch (speed) {
+    case '0':
+      intervalValue = 1500;
+      break;
+    case '1':
+      intervalValue = 700;
+      break;
+    case '2':
+      intervalValue = 500;
+      break;
+    case '3':
+      intervalValue = 200;
+      break;
+    case '4':
+      intervalValue = 0;
+      break;
+  }
+};
+
+// Method toggling cell life
+toggleCell = function(row, col) {
+  grid[row][col] = grid[row][col] === 0 ? 1 : 0;
+};
 
 // Grid generation method, based on height and width parameters
 generateGrid = function() {
@@ -170,10 +200,18 @@ generateRandomGlider = function() {
 // Method firing the automatic play according to the selected speed
 playGame = function() {
   isPlaying = true;
-  playInterval = setInterval(() => {
+  automaticPlay();
+};
+
+// Method that repeats automatically
+automaticPlay = function() {
+  if (isPlaying) {
     playNextStep();
     mainWindow.webContents.send('update-grid', grid);
-  }, 1000);
+    setTimeout(() => {
+      automaticPlay();
+    }, intervalValue);
+  }
 };
 
 // Method playing the next step in the game
@@ -184,7 +222,6 @@ playNextStep = function() {
 // Method pausing the game
 pauseGame = function() {
   isPlaying = false;
-  clearInterval(playInterval);
 };
 
 // Method calculating next grid according to the current one

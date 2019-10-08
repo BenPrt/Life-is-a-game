@@ -14,7 +14,7 @@
     <div class="stacked-field">
       <label class="settings-label" for="speed-input">Speed :</label>
       <input id="speed-input" type="range" name="speed" v-model="speed"
-      min="0" max="10" @change="updateSpeed()">
+      min="0" max="4" @change="updateSpeed($event)">
     </div>
   </div>
 </template>
@@ -34,7 +34,7 @@ export default {
       width: 30,
       minWidth: 3,
       maxWidth: 50,
-      speed: 1,
+      speed: '2',
     };
   },
   methods: {
@@ -43,7 +43,7 @@ export default {
       ipcRenderer.on('reseted-game', () => {
         vm.height = 30;
         vm.width = 30;
-        vm.speed = 1;
+        vm.speed = 2;
         this.updateHeight();
         this.updateWidth();
         this.updateSpeed();
