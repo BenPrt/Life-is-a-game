@@ -4,12 +4,12 @@
     <div class="inline-field">
       <label class="settings-label" for="height-input">Height :</label>
       <input id="height-input" type="number" name="height" v-model="height"
-      placeholder="Height" min="1" max="34" @change="updateHeight()">
+      placeholder="Height" v-bind:min="minHeight" v-bind:max="maxHeight" @change="updateHeight()">
     </div>
     <div class="inline-field">
       <label class="settings-label" for="width-input">Width :</label>
       <input id="width-input" type="number" name="width" v-model="width"
-      placeholder="Width" min="1" max="50" @change="updateWidth()">
+      placeholder="Width" v-bind:min="minWidth" v-bind:max="maxWidth" @change="updateWidth()">
     </div>
     <div class="stacked-field">
       <label class="settings-label" for="speed-input">Speed :</label>
@@ -28,27 +28,31 @@ export default {
   },
   data() {
     return {
-      width: 30,
       height: 30,
+      minHeight: 3,
+      maxHeight: 34,
+      width: 30,
+      minWidth: 3,
+      maxWidth: 50,
       speed: 1,
     };
   },
   methods: {
     updateHeight() {
-      if (this.height < 1) {
-        this.height = 1;
+      if (this.height < this.minHeight) {
+        this.height = this.minHeight;
       }
-      if (this.height > 34) {
-        this.height = 34;
+      if (this.height > this.maxHeight) {
+        this.height = this.maxHeight;
       }
       ipcRenderer.send('update-height', this.height);
     },
     updateWidth() {
-      if (this.width < 1) {
-        this.width = 1;
+      if (this.width < this.minWidth) {
+        this.width = this.minWidth;
       }
-      if (this.width > 50) {
-        this.width = 50;
+      if (this.width > this.maxWidth) {
+        this.width = this.maxWidth;
       }
       ipcRenderer.send('update-width', this.width);
     },

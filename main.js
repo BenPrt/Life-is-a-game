@@ -116,4 +116,17 @@ generateGrid = function() {
     }
     grid.push(rowValues);
   }
+  if (grid[0].length >= 3 && grid.length >= 3) {
+    const gliderRowIdx = Math.round(Math.random() * (height - 1 - 2) + 2);
+    const gliderColIdx = Math.round(Math.random() * (width - 3) + 0);
+    generateGlider(gliderRowIdx, gliderColIdx);
+  }
+};
+
+generateGlider = function(row, col) {
+  grid[row][col] = 1;
+  grid[row][col + 1] = 1;
+  grid[row][col + 2] = 1;
+  grid[row - 2][col + 1] = 1;
+  grid[row - 1][col + 2] = 1;
 };

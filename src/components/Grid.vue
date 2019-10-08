@@ -50,6 +50,9 @@ export default {
     height: 536px;
     width: 536px;
     margin-left: calc((100% - 536px) / 2);
+    display : flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #grid-cell {
