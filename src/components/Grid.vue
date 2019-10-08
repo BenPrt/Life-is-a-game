@@ -29,6 +29,7 @@ export default {
       const vm = this;
       ipcRenderer.on('update-grid', (event, arg) => {
         vm.gridValue = arg;
+        console.log(vm.gridValue);
       });
       ipcRenderer.on('reset-game', () => {
         vm.gridValue = [];

@@ -164,6 +164,7 @@ playNextStep = function() {
 };
 
 getNextGen = function() {
+  console.log('LETS GET NEXT GEN');
   // Next grid initialisation
   let nextGrid = [];
   for (let i = 0; i < grid.length; i++) {
@@ -173,38 +174,10 @@ getNextGen = function() {
   for (let rowIdx = 0; rowIdx < height; rowIdx += 1) {
     for (let colIdx = 0; colIdx < width; colIdx += 1) {
       // ...let's count how many neighbours the current cell have
-      let neighNb = 0;
-
-      for (let x = -1; x <= 1; x += 1) {
-        let usableX;
-        // If we're at an extremity, we use the first cell from the other side (torus grid)
-        if (colIdx + x < 0) {
-          usableX = width - 1;
-        } else if (colIdx + x > width - 1) {
-          usableX = 0;
-        } else {
-          usableX = colIdx + x;
-        }
-
-        for (let y = -1; y <= 1; y += 1) {
-          let usableY;
-          if (rowIdx + y < 0) {
-            usableY = height - 1;
-          } else if (rowIdx + y > height - 1) {
-            usableY = 0;
-          } else {
-            usableY = rowIdx + y;
-          }
-
-          if (usableY !== 0 && usableX !== 0 && grid[usableY][usableX] === 1) {
-            neighNb += 1;
-          }
-        }
-      }
+      let neighNb = getNeighboursCount(rowIdx, colIdx);
 
       // Now, let's define next value for the cell according to its current neighbour number
       cellValue = grid[rowIdx][colIdx];
-      console.log(neighNb);
       switch (neighNb) {
         case 0:
         case 1:
@@ -214,6 +187,7 @@ getNextGen = function() {
           break;
         case 3:
           cellValue = 1;
+          console.log(`cell [${rowIdx},${colIdx}] is now alive!`);
           break;
         default:
           cellValue = 0;
@@ -222,4 +196,44 @@ getNextGen = function() {
     }
   }
   return nextGrid;
+};
+
+getNeighboursCount = function(row, col) {
+  let neighbors = [];
+
+  neighbors = [
+    getNeighbour(row, col, -1, -1),
+    getNeighbour(row, col, -1, 0),
+    getNeighbour(row, col, -1, 1),
+    getNeighbour(row, col, 0, -1),
+    getNeighbour(row, col, 0, 1),
+    getNeighbour(row, col, 1, -1),
+    getNeighbour(row, col, 1, 0),
+    getNeighbour(row, col, 1, 1),
+  ];
+  const sum = (a, b) => a + b;
+
+  return neighbors.reduce(sum);
+};
+
+getNeighbour = function(row_actual, col_actual, vert_shift, hori_shift) {
+  let row;
+  let column;
+  if (row_actual + vert_shift < 0) {
+    row = height - 1;
+  } else if (row_actual + vert_shift > height - 1) {
+    row = 0;
+  } else {
+    row = row_actual + vert_shift;
+  }
+
+  if (col_actual + hori_shift < 0) {
+    column = width - 1;
+  } else if (col_actual + hori_shift > width - 1) {
+    column = 0;
+  } else {
+    column = col_actual + hori_shift;
+  }
+
+  return grid[row][column];
 };
