@@ -30,6 +30,7 @@ export default {
   },
   methods: {
     initListeners() {
+      // Keeping the current context (viewmodel) in memory
       const vm = this;
       ipcRenderer.on('played-game', () => {
         vm.isPlaying = true;
@@ -42,18 +43,15 @@ export default {
       });
     },
     play() {
-      this.isPlaying = true;
       ipcRenderer.send('play-game');
     },
     stop() {
-      this.isPlaying = false;
       ipcRenderer.send('pause-game');
     },
     playNext() {
       ipcRenderer.send('play-next');
     },
     reset() {
-      this.isPlaying = false;
       ipcRenderer.send('reset-game');
     },
   },

@@ -22,19 +22,19 @@ export default {
     };
   },
   methods: {
-    generateGrid() {
-      ipcRenderer.send('generate-grid');
-    },
     initListeners() {
+      // Keeping the current context (viewmodel) in memory
       const vm = this;
       ipcRenderer.on('update-grid', (event, arg) => {
         vm.gridValue = arg;
-        console.log(vm.gridValue);
       });
       ipcRenderer.on('reset-game', () => {
         vm.gridValue = [];
         this.generateGrid();
       });
+    },
+    generateGrid() {
+      ipcRenderer.send('generate-grid');
     },
     toggleCell(x, y) {
       ipcRenderer.send('toggle-cell', [x, y]);
@@ -52,11 +52,11 @@ export default {
 
 <style>
 #grid-container {
-    height: 536px;
-    width: 536px;
-    margin-left: calc((100% - 536px) / 2);
-    display : flex;
-    justify-content: center;
+  height: 536px;
+  width: 536px;
+  margin-left: calc((100% - 536px) / 2);
+  display : flex;
+  justify-content: center;
 }
 
 #grid-cell {

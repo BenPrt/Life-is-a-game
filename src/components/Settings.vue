@@ -88,8 +88,8 @@ export default {
 }
 
 #settings-title {
-    font-family: 'Indie Flower', cursive;
-    color : #888888;
+  font-family: 'Indie Flower', cursive;
+  color : #888888;
 }
 
 .inline-field {

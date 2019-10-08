@@ -66,19 +66,21 @@ app.on('activate', () => {
 
 // =========================================
 // -----------------------------------------
-// -----  IPC methods
+// -----  Algorithm part
 
 // Ipc Main process import
 const ipcMain = electron.ipcMain;
 
-// App parameter
+// App parameters
 let grid = [];
 let height = 1;
 let width = 1;
 let speed = 1;
+let playInterval;
 
 let isPlaying = false;
 
+// -------------------------------------
 // IPC interceptors for updating parameters (height, width and speed)
 ipcMain.on('update-height', (event, arg) => {
   height = arg;
@@ -96,18 +98,21 @@ ipcMain.on('update-speed', (event, arg) => {
   mainWindow.webContents.send('update-grid', grid);
 });
 
+// -------------------------------------
 // IPC interceptor for the first grid generation
 ipcMain.on('generate-grid', event => {
   generateGrid();
   event.sender.send('update-grid', grid);
 });
 
+// -------------------------------------
 // IPC interceptor for toggling alive/dead cell
 ipcMain.on('toggle-cell', (event, arg) => {
   grid[arg[0]][arg[1]] = grid[arg[0]][arg[1]] === 0 ? 1 : 0;
   event.sender.send('update-grid', grid);
 });
 
+// -------------------------------------
 // IPC interceptors for game status
 ipcMain.on('play-game', event => {
   isPlaying = true;
@@ -120,15 +125,19 @@ ipcMain.on('play-next', event => {
   mainWindow.webContents.send('update-grid', grid);
 });
 ipcMain.on('pause-game', event => {
-  isPlaying = false;
+  pauseGame();
   event.sender.send('paused-game');
 });
 
+// -------------------------------------
 // IPC interceptor for game reset
 ipcMain.on('reset-game', event => {
-  isPlaying = false;
+  pauseGame();
   mainWindow.webContents.send('reseted-game');
 });
+
+//-------------------------------------------
+// Calculation methods
 
 // Grid generation method, based on height and width parameters
 generateGrid = function() {
@@ -140,14 +149,17 @@ generateGrid = function() {
     }
     grid.push(rowValues);
   }
+
+  // If there is enough space, we create a glider on the grid
   if (grid[0].length >= 3 && grid.length >= 3) {
-    const gliderRowIdx = Math.round(Math.random() * (height - 1 - 2) + 2);
-    const gliderColIdx = Math.round(Math.random() * (width - 3) + 0);
-    generateGlider(gliderRowIdx, gliderColIdx);
+    generateRandomGlider(gliderRowIdx, gliderColIdx);
   }
 };
 
-generateGlider = function(row, col) {
+// Glider random generation method
+generateRandomGlider = function() {
+  const row = Math.round(Math.random() * (height - 1 - 2) + 2);
+  const col = Math.round(Math.random() * (width - 3) + 0);
   grid[row][col] = 1;
   grid[row][col + 1] = 1;
   grid[row][col + 2] = 1;
@@ -155,16 +167,28 @@ generateGlider = function(row, col) {
   grid[row - 1][col + 2] = 1;
 };
 
+// Method firing the automatic play according to the selected speed
 playGame = function() {
-  grid = getNextGen();
+  isPlaying = true;
+  playInterval = setInterval(() => {
+    playNextStep();
+    mainWindow.webContents.send('update-grid', grid);
+  }, 1000);
 };
 
+// Method playing the next step in the game
 playNextStep = function() {
   grid = getNextGen();
 };
 
+// Method pausing the game
+pauseGame = function() {
+  isPlaying = false;
+  clearInterval(playInterval);
+};
+
+// Method calculating next grid according to the current one
 getNextGen = function() {
-  console.log('LETS GET NEXT GEN');
   // Next grid initialisation
   let nextGrid = [];
   for (let i = 0; i < grid.length; i++) {
@@ -187,7 +211,6 @@ getNextGen = function() {
           break;
         case 3:
           cellValue = 1;
-          console.log(`cell [${rowIdx},${colIdx}] is now alive!`);
           break;
         default:
           cellValue = 0;
@@ -198,6 +221,7 @@ getNextGen = function() {
   return nextGrid;
 };
 
+// Method counting the number of alive neighbors of a specific cell
 getNeighboursCount = function(row, col) {
   let neighbors = [];
 
@@ -216,6 +240,7 @@ getNeighboursCount = function(row, col) {
   return neighbors.reduce(sum);
 };
 
+// Method returning the neighbour of a cell according to the vertical/horizontal shift passed in parameter
 getNeighbour = function(row_actual, col_actual, vert_shift, hori_shift) {
   let row;
   let column;
