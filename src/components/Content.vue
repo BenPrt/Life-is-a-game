@@ -9,7 +9,6 @@
 import Grid from './Grid';
 import Settings from './Settings';
 
-
 export default {
   name: 'Content',
   components: {
@@ -22,8 +21,8 @@ export default {
 
 <style>
 #content-container {
-    display: flex;
-height : 613px;
-width : 100%;
+  display: flex;
+  height : 613px;
+  width : 100%;
 }
 </style>

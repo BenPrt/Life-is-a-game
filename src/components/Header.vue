@@ -1,6 +1,6 @@
 <template>
   <div id="header-container">
-    <h1 id="app-title">Life is a game</h1>
+    <h1 id="app-title">Life is a game..</h1>
     <button class="main-button" id="play-button" v-if="!isPlaying" @click="play()">
       <i class="far fa-play-circle"></i> Play
     </button>
@@ -33,7 +33,7 @@ export default {
 #header-container {
   height: calc(153px - 16px);
   width: 100%;
-  padding-top : 16px;
+  padding-top: 16px;
 }
 #app-title {
   width: 100%;
@@ -48,32 +48,32 @@ export default {
   height: 40px;
   width: 100px;
   border: none;
-  border-radius : 3px;
-  font-size : 20px;
-  cursor : pointer;
-  outline : none;
+  border-radius: 3px;
+  font-size: 20px;
+  cursor: pointer;
+  outline: none;
 }
 .main-button:hover{
-  color : #EEEEEE;
+  color: #EEEEEE;
 }
 
 #play-button{
-  background-color : #e7a300;
-  color : white;
+  background-color: #e7a300;
+  color: white;
 }
 .fa-play-circle{
-  color : white;
+  color: white;
 }
 .main-button:hover .fa-play-circle{
-  color : #EEEEEE;
+  color: #EEEEEE;
 }
 
 #pause-button{
-  color : #e7a300;
-  background-color : white;
-  border : 1px solid #e7a300;
+  color: #e7a300;
+  background-color: white;
+  border: 1px solid #e7a300;
 }
-.fa-pause-circle{
-  color : #e7a300;
+.fa-pause-circle {
+  color: #e7a300;
 }
 </style>

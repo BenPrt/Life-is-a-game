@@ -1,26 +1,33 @@
+// ===========================================
+// -------------------------------------------
+// -----  Window creation and management part
+
+// Libraries imports
 const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-require('./ipc');
-
 let url = require('url');
 const path = require('path');
+
 let mainWindow;
 
+// We check what is the target environment from launching command parameter
 const env = process.argv[2];
 
+// Window creation method
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 860,
     icon: 'src/assets/Ankama_Logo.png',
-    title: 'Life is a game',
+    title: 'Ankama Technical Test : An Electron/VueJs Game of Life',
     webPreferences: {
       nodeIntegration: true,
     },
   });
 
+  // If there is a "prod" argument in parameters, we load the builded VueJS package
   if (env === 'prod') {
     console.log('Building production.....');
     mainWindow.loadURL(
@@ -31,6 +38,7 @@ function createWindow() {
       }),
     );
   } else {
+    // ..else, we listen to the dev server
     console.log('Starting Dev Environment.....');
     mainWindow.loadURL('http://localhost:8080');
   }
@@ -40,6 +48,8 @@ function createWindow() {
   });
 }
 
+// -----------------------------------------
+// Window behaviour methods
 app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
@@ -53,3 +63,57 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+// =========================================
+// -----------------------------------------
+// -----  IPC methods
+
+// Ipc Main process import
+const ipcMain = electron.ipcMain;
+
+// App parameter
+let grid = [];
+let height = 1;
+let width = 1;
+let speed = 1;
+
+// IPC interceptors for updating parameters (height, width and speed)
+ipcMain.on('update-height', (event, arg) => {
+  height = arg;
+  generateGrid();
+  mainWindow.webContents.send('update-grid', grid);
+});
+ipcMain.on('update-width', (event, arg) => {
+  width = arg;
+  generateGrid();
+  mainWindow.webContents.send('update-grid', grid);
+});
+ipcMain.on('update-speed', (event, arg) => {
+  speed = arg;
+  generateGrid();
+  mainWindow.webContents.send('update-grid', grid);
+});
+
+// IPC interceptor for the first grid generation
+ipcMain.on('generate-grid', event => {
+  generateGrid();
+  event.sender.send('update-grid', grid);
+});
+
+// IPC interceptor for toggling alive/dead cell
+ipcMain.on('toggle-cell', (event, arg) => {
+  grid[arg[0]][arg[1]] = grid[arg[0]][arg[1]] === 0 ? 1 : 0;
+  event.sender.send('update-grid', grid);
+});
+
+// Grid generation method, based on height and width parameters
+generateGrid = function() {
+  grid = [];
+  for (let row = 0; row < height; row += 1) {
+    const rowValues = [];
+    for (let col = 0; col < width; col += 1) {
+      rowValues.push(0);
+    }
+    grid.push(rowValues);
+  }
+};
