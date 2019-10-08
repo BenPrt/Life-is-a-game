@@ -39,14 +39,8 @@ export default {
   },
   methods: {
     initListeners() {
-      const vm = this;
       ipcRenderer.on('reseted-game', () => {
-        vm.height = 30;
-        vm.width = 30;
-        vm.speed = 2;
-        this.updateHeight();
-        this.updateWidth();
-        this.updateSpeed();
+        this.resetSettings();
       });
     },
     updateHeight() {
@@ -69,6 +63,14 @@ export default {
     },
     updateSpeed() {
       ipcRenderer.send('update-speed', this.speed);
+    },
+    resetSettings() {
+      this.height = 30;
+      this.width = 30;
+      this.speed = 2;
+      this.updateHeight();
+      this.updateWidth();
+      this.updateSpeed();
     },
   },
   mounted() {
