@@ -152,7 +152,7 @@ generateGrid = function() {
 
   // If there is enough space, we create a glider on the grid
   if (grid[0].length >= 3 && grid.length >= 3) {
-    generateRandomGlider(gliderRowIdx, gliderColIdx);
+    generateRandomGlider();
   }
 };
 
