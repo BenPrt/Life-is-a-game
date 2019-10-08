@@ -1,6 +1,6 @@
 <template>
   <div id="content-container">
-    <Grid v-bind:gridValue="this.gridValue"/>
+    <Grid/>
     <Settings/>
   </div>
 </template>

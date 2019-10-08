@@ -12,27 +12,39 @@
 </template>
 
 <script>
+const ipcRenderer = window.require('electron').ipcRenderer;
 
 export default {
   name: 'Grid',
-  props: ['gridValue'],
   data() {
     return {
+      gridValue : [],
     };
   },
   methods: {
+    generateGrid() {
+      console.log('calling generate grid...');
+      ipcRenderer.send('generate-grid');
+    },
+    initListeners(){
+      let vm = this;
+      ipcRenderer.on('update-grid', function (event, arg) {
+        vm.gridValue = arg;
+        console.log('updating grid...', vm.gridValue);
+      });
+    },
     toggleCell(x, y) {
-      console.log(x, y);
-      console.log(this.gridValue[x][y]);
-
-      this.gridValue[x][y] = this.gridValue[x][y] === 0 ? 1 : 0;
-      console.log(this.gridValue[x][y]);
+      ipcRenderer.send('toggle-cell', [x, y]);
     },
     isAlive(cell) {
       return cell !== 0;
     },
   },
   beforeMount() {
+    this.initListeners();
+    this.generateGrid();
+  },
+  mounted() {
   },
 };
 </script>

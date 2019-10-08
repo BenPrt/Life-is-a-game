@@ -2,6 +2,8 @@ const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
+require('./ipc');
+
 let url = require('url');
 const path = require('path');
 let mainWindow;
@@ -14,6 +16,9 @@ function createWindow() {
     height: 860,
     icon: 'src/assets/Ankama_Logo.png',
     title: 'Life is a game',
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
 
   if (env === 'prod') {

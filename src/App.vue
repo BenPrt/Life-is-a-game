@@ -1,11 +1,12 @@
 <template>
   <div id="app">
     <Header/>
-    <Content v-bind:gridValue="this.gridValue"/>
+    <Content/>
   </div>
 </template>
 
 <script>
+const ipcRenderer = window.require('electron').ipcRenderer;
 import Header from './components/Header';
 import Content from './components/Content';
 
@@ -17,26 +18,14 @@ export default {
   },
   data() {
     return {
-      gridValue: [],
     };
   },
   methods: {
-    generateGrid() {
-      for (let row = 0; row < 30; row += 1) {
-        const rowValues = [];
-        for (let col = 0; col < 30; col += 1) {
-          rowValues.push(0);
-        }
-        this.gridValue.push(rowValues);
-      }
-    },
+
   },
   beforeMount() {
-    this.generateGrid();
   },
 };
-
-
 </script>
 
 <style>
