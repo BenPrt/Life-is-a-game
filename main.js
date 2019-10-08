@@ -77,6 +77,8 @@ let height = 1;
 let width = 1;
 let speed = 1;
 
+let isPlaying = false;
+
 // IPC interceptors for updating parameters (height, width and speed)
 ipcMain.on('update-height', (event, arg) => {
   height = arg;
@@ -104,6 +106,22 @@ ipcMain.on('generate-grid', event => {
 ipcMain.on('toggle-cell', (event, arg) => {
   grid[arg[0]][arg[1]] = grid[arg[0]][arg[1]] === 0 ? 1 : 0;
   event.sender.send('update-grid', grid);
+});
+
+// IPC interceptors for game status
+ipcMain.on('play-game', event => {
+  isPlaying = true;
+  event.sender.send('played-game');
+});
+ipcMain.on('pause-game', event => {
+  isPlaying = false;
+  event.sender.send('paused-game');
+});
+
+// IPC interceptor for game reset
+ipcMain.on('reset-game', event => {
+  isPlaying = false;
+  mainWindow.webContents.send('reseted-game');
 });
 
 // Grid generation method, based on height and width parameters

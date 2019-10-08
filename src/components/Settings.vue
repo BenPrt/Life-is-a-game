@@ -38,6 +38,17 @@ export default {
     };
   },
   methods: {
+    initListeners() {
+      const vm = this;
+      ipcRenderer.on('reseted-game', () => {
+        vm.height = 30;
+        vm.width = 30;
+        vm.speed = 1;
+        this.updateHeight();
+        this.updateWidth();
+        This.updateSpeed();
+      });
+    },
     updateHeight() {
       if (this.height < this.minHeight) {
         this.height = this.minHeight;
@@ -61,6 +72,7 @@ export default {
     },
   },
   mounted() {
+    this.initListeners();
     this.updateHeight();
     this.updateWidth();
     this.updateSpeed();

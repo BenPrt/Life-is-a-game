@@ -30,6 +30,10 @@ export default {
       ipcRenderer.on('update-grid', (event, arg) => {
         vm.gridValue = arg;
       });
+      ipcRenderer.on('reset-game', () => {
+        vm.gridValue = [];
+        this.generateGrid();
+      });
     },
     toggleCell(x, y) {
       ipcRenderer.send('toggle-cell', [x, y]);
@@ -51,7 +55,6 @@ export default {
     width: 536px;
     margin-left: calc((100% - 536px) / 2);
     display : flex;
-    align-items: center;
     justify-content: center;
 }
 
