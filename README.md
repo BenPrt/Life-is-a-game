@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is an Electron/VueJs implementation of the John Conway's Game of Life.
+This project is an Electron/VueJs implementation of the John Conway's Game of Life. It was part of a job technical interview, and I made it from scratch in less than 48 hours without any knowledge of Electron, and only basics of VueJs.
 
 #### Features
 
@@ -31,6 +31,12 @@ The codebase is linted with ESLint and the Airbnb configuration.
 
 ```bash
 npm install
+```
+
+I would also advise you to execute this command to have the less vulnerable libraries possible :
+
+```bash
+npm audit fix
 ```
 
 ## Start the project
