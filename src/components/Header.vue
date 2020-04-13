@@ -19,7 +19,7 @@
 </template>
 
 <script>
-const ipcRenderer = window.require('electron').ipcRenderer;
+const { ipcRenderer } = window.require('electron');
 
 export default {
   name: 'Header',
