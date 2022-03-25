@@ -13,7 +13,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "electron": "^6.1.9",
+    "electron": "^13.6.6",
     "vue": "^2.6.11"
   },
   "devDependencies": {
